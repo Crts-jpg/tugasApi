@@ -10,12 +10,17 @@ function Trending() {
 
   useEffect(() => {
     axiosInstance
-      .get("/discover/movie")
+      .get("/discover/movie", {
+        headers : {
+          "Authorization" : "Bearer "+process.env.REACT_APP_TMDB_KEY
+        }
+      })
       .then((response) => {
         setMovies(response.data.results);
       })
       .catch((error) => {
-        throw new Error('Gagal mendapatkan data film: ' + error.message);
+        console.log(error)
+        console.error('Gagal mendapatkan data film: ' + error.message);
       });
   }, [])
 
@@ -23,15 +28,17 @@ function Trending() {
     try {
       axios
         .get(`${process.env.REACT_APP_BASE_URL}/discover/movie`, {
-          params: {
-            api_key: process.env.REACT_APP_TMDB_KEY,
-          },
+          headers : {
+            "Authorization" : "Bearer "+ process.env.REACT_APP_TMDB_KEY
+          }
         })
         .then((response) => {
+          console.log(response.data.results)
           setMovies(response.data.results);
         })
         .catch((error) => {
-          throw new Error('Gagal mendapatkan data film: ' + error.message);
+          console.log(error)
+          console.error('Gagal mendapatkan data film: ' + error.message);
         });
     } catch (error) {
       console.error('Terjadi kesalahan: ' + error.message);
@@ -51,7 +58,7 @@ function Trending() {
             <Col md={4} className="movieWrapper" key={index}>
               <Card className="text-white movieImage bg-dark">
                 <Image
-                  src={`${process.env.REACT_APP_IMAGE_URL}/${result.poster_path}`}
+                  src={`${process.env.REACT_APP_IMAGE_URL}/t/p/original/${result.poster_path}`}
                   alt="test"
                   //   width="50%"
                   className="images"
